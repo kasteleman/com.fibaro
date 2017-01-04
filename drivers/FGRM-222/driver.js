@@ -6,6 +6,7 @@ const ZwaveDriver = require('homey-zwavedriver');
 // http://www.pepper1.net/zwavedb/device/492
 
 module.exports = new ZwaveDriver(path.basename(__dirname), {
+	debug: true,
 	capabilities: {
 		windowcoverings_state: {
 			command_class: 'COMMAND_CLASS_SWITCH_BINARY',
@@ -49,7 +50,24 @@ module.exports = new ZwaveDriver(path.basename(__dirname), {
 				}
 			}
 		},
-		
+		dim: {
+			command_class: 'COMMAND_CLASS_SWITCH_MULTILEVEL',
+			command_get: 'SWITCH_MULTILEVEL_GET',
+			command_set: 'SWITCH_MULTILEVEL_SET',
+			command_set_parser: value => {
+				if (value >= 1) value = 0.99;
+
+				return {
+					'Value': value * 100,
+					'Dimming Duration': 'Factory default',
+				};
+			},
+			command_report: 'SWITCH_MULTILEVEL_REPORT',
+			command_report_parser: report => {
+				if (typeof report['Value (Raw)'] !== 'undefined' && report['Value (Raw)'][0]) return report['Value (Raw)'][0] / 100;
+				return (report['Value'] === 'on/enable') ? 1 : 0;
+			}
+		},
 		measure_power: {
 			command_class: 'COMMAND_CLASS_SENSOR_MULTILEVEL',
 			command_get: 'SENSOR_MULTILEVEL_GET',

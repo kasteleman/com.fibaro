@@ -5518,6 +5518,7 @@
       "class": "windowcoverings",
       "capabilities": [
         "windowcoverings_state",
+        "dim",
         "measure_power"
       ],
       "mobile": {
@@ -5525,6 +5526,12 @@
           {
             "capabilities": [],
             "id": "icon"
+          },
+          {
+            "capabilities": [
+              "dim"
+            ],
+            "id": "slider"
           },
           {
             "capabilities": [

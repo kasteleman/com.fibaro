@@ -29,7 +29,7 @@ module.exports = new ZwaveDriver(path.basename(__dirname), {
 				}
 
 				return {
-					'Switch Value': result
+					'Switch Value': result,
 				};
 			},
 			command_report: 'SWITCH_BINARY_REPORT',
@@ -48,8 +48,9 @@ module.exports = new ZwaveDriver(path.basename(__dirname), {
 					default:
 						return 'idle';
 				}
-			}
+			},
 		},
+
 		dim: {
 			command_class: 'COMMAND_CLASS_SWITCH_MULTILEVEL',
 			command_get: 'SWITCH_MULTILEVEL_GET',
@@ -64,17 +65,31 @@ module.exports = new ZwaveDriver(path.basename(__dirname), {
 			},
 			command_report: 'SWITCH_MULTILEVEL_REPORT',
 			command_report_parser: report => {
-				if (typeof report['Value (Raw)'] !== 'undefined' && report['Value (Raw)'][0]) return report['Value (Raw)'][0] / 100;
-				return (report['Value'] === 'on/enable') ? 1 : 0;
-			}
+				if (typeof report['Value (Raw)'] === 'undefined') return null;
+				return report['Value (Raw)'][0] / 100;
+			},
 		},
 		measure_power: {
 			command_class: 'COMMAND_CLASS_SENSOR_MULTILEVEL',
 			command_get: 'SENSOR_MULTILEVEL_GET',
 			command_report: 'SENSOR_MULTILEVEL_REPORT',
-			command_report_parser: report => report['Sensor Value (Parsed)']
-		}
+			command_report_parser: report => report['Sensor Value (Parsed)'],
+		},
+		meter_power: {
+			command_class: 'COMMAND_CLASS_METER',
+			command_get: 'METER_GET',
+			command_get_parser: () => {
+				return {
+					'Properties1': {
+						'Scale': 0
+					},
+				};
+			},
+			command_report: 'METER_REPORT',
+			command_report_parser: report => report['Meter Value (Parsed)'],
+		},
 	},
+
 	settings: {
 		'reports_type': {
 			index: 3,
@@ -101,5 +116,5 @@ module.exports = new ZwaveDriver(path.basename(__dirname), {
 			index: 29,
 			size: 1,
 		},
-	}
+	},
 });

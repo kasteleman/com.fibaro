@@ -5519,7 +5519,8 @@
       "capabilities": [
         "windowcoverings_state",
         "dim",
-        "measure_power"
+        "measure_power",
+        "meter_power"
       ],
       "mobile": {
         "components": [
@@ -5535,7 +5536,8 @@
           },
           {
             "capabilities": [
-              "measure_power"
+              "measure_power",
+              "meter_power"
             ],
             "id": "sensor"
           },
